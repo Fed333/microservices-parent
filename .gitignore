@@ -1,2 +1,4 @@
 # Project exclude paths
 /platform-services/discovery/target/
+/platform-services/api-gateway/target/
+
