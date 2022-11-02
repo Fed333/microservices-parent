@@ -2,3 +2,5 @@
 /platform-services/discovery/target/
 /platform-services/api-gateway/target/
 
+/business-services/common/target/
+/.idea/
