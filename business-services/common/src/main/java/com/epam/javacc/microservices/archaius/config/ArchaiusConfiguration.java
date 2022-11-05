@@ -18,8 +18,10 @@ public class ArchaiusConfiguration {
     @Bean
     public AbstractConfiguration addApplicationPropertiesSource() throws IOException {
         URL configPropertyURL = (new ClassPathResource("other-config.properties")).getURL();
-        PolledConfigurationSource source = new URLConfigurationSource(configPropertyURL);
-        return new DynamicConfiguration(source, new FixedDelayPollingScheduler());
+        URL routingDatasourceURL = (new ClassPathResource("routing-datasource.properties")).getURL();
+        PolledConfigurationSource source = new URLConfigurationSource(configPropertyURL, routingDatasourceURL);
+
+        return new DynamicConfiguration(source, new FixedDelayPollingScheduler(10000, 10000, false));
     }
 
 }
