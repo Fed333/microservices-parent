@@ -6,12 +6,10 @@ import com.netflix.servo.annotations.DataSourceType;
 import com.netflix.servo.annotations.Monitor;
 import com.netflix.servo.annotations.MonitorTags;
 import com.netflix.servo.monitor.Monitors;
-import com.netflix.servo.publish.MemoryMetricObserver;
 import com.netflix.servo.tag.BasicTag;
 import com.netflix.servo.tag.BasicTagList;
 import com.netflix.servo.tag.TagList;
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -19,6 +17,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.*;
@@ -46,7 +45,7 @@ public class MonitorRegistryTest extends MetricTestBase {
         updateCount.incrementAndGet();
         updateCount.incrementAndGet();
 
-        SECONDS.sleep(1);
+        SECONDS.sleep(2);
 
         List<List<Metric>> metrics = observer.getObservations();
 
@@ -56,11 +55,21 @@ public class MonitorRegistryTest extends MetricTestBase {
         it.next(); //skip empty observations
 
         while (it.hasNext()) {
-            MatcherAssert.assertThat(it.next(), hasItem(
+            List<Metric> next = it.next();
+            MatcherAssert.assertThat(next, hasItem(
                     hasProperty(
                             "config",
-                            hasProperty("name", is("integerCounter"))
+                            hasProperty("name", is("integerCounter")
+                    )))
+            );
+            MatcherAssert.assertThat(next, hasItem(
+                    hasProperty(
+                            "value",
+                            sameInstance(updateCount)
                     ))
+            );
+            MatcherAssert.assertThat(next.stream().map(m->((AtomicInteger)m.getValue()).get()).collect(Collectors.toList()), hasItem(
+                is(2))
             );
         }
     }
