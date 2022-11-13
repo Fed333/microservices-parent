@@ -1,9 +1,7 @@
 package com.epam.javacc.microservices.servo.metrics.metric;
 
 import com.netflix.servo.Metric;
-import com.netflix.servo.monitor.BasicCounter;
 import com.netflix.servo.monitor.Counter;
-import com.netflix.servo.monitor.MonitorConfig;
 import com.netflix.servo.publish.MemoryMetricObserver;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Component
 @Slf4j

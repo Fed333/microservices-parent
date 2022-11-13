@@ -1,14 +1,11 @@
 package com.epam.javacc.microservices.servo.metrics.controller;
 
 import com.epam.javacc.microservices.servo.metrics.service.ServiceOneService;
-import com.epam.javacc.microservices.servo.metrics.utils.MapUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
-import static com.epam.javacc.microservices.servo.metrics.utils.DataTimeUtils.getCurrentTimestamp;
 
 @RestController
 @RequestMapping("/service-one")
