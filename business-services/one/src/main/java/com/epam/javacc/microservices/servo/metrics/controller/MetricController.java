@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/metrics")
+@RequestMapping("/service-one/metrics")
 public class MetricController {
 
     private final MetricKeeper metricKeeper;
