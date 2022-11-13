@@ -29,6 +29,7 @@ public class MetricKeeper {
     }
 
     public Counter getCounter(String name) {
+        //TODO extract this demo observer code to something meaningful
         Metric metric = observer.getObservations().stream().flatMap(Collection::stream)
                 .filter(m -> m.getConfig().getName().equals(name))
                 .findFirst().orElse(null);
