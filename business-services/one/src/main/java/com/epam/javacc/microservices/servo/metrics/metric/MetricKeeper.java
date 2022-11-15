@@ -1,7 +1,9 @@
 package com.epam.javacc.microservices.servo.metrics.metric;
 
 import com.netflix.servo.Metric;
+import com.netflix.servo.monitor.BasicTimer;
 import com.netflix.servo.monitor.Counter;
+import com.netflix.servo.monitor.Timer;
 import com.netflix.servo.publish.MemoryMetricObserver;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,9 @@ public class MetricKeeper {
     @Getter
     private final Map<String, Counter> counterMetrics = new HashMap<>();
 
+    @Getter
+    private final Map<String, BasicTimer> timerMonitors = new HashMap<>();
+
     @Autowired
     private MemoryMetricObserver observer;
 
@@ -35,6 +40,10 @@ public class MetricKeeper {
                 .findFirst().orElse(null);
         log.info("Metric {}", metric);
         return counterMetrics.get(name);
+    }
+
+    public BasicTimer getTimer(String name) {
+        return timerMonitors.get(name);
     }
 
 }

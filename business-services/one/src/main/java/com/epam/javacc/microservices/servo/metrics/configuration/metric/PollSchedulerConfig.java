@@ -23,11 +23,11 @@ public class PollSchedulerConfig {
     @PostConstruct
     private void init() {
         log.info("PollSchedulerConfig#init invoked");
-        System.setProperty("servo.pollers", "1000");
+        System.setProperty("servo.pollers", "600000");
         PollScheduler.getInstance().start();
 
         PollRunnable task = new PollRunnable(new MonitorRegistryMetricPoller(), basicMetricFilter, basicMemoryObserver);
-        PollScheduler.getInstance().addPoller(task, 1, TimeUnit.SECONDS);
+        PollScheduler.getInstance().addPoller(task, 10, TimeUnit.MINUTES);
     }
 
     @PreDestroy
