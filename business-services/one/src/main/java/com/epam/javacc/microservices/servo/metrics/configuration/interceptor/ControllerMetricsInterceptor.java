@@ -45,6 +45,7 @@ public class ControllerMetricsInterceptor implements HandlerInterceptor {
             stopwatch.stop();
             log.info("Timer end of execution {}.", buildMetricName(request));
             log.info("Duration: {} ms.", stopwatch.getDuration(TimeUnit.MILLISECONDS));
+            log.info("Total time: {} ms.", metricKeeper.getTimer(buildMetricName(request)).getTotalTime());
             stopwatchThreadLocal.set(null);
         }
         log.info("[END] {} {}", request.getMethod(), request.getRequestURI());

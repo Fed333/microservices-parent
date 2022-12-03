@@ -68,7 +68,7 @@ public class MonitorMetricsRegistryBeanPostProcessor implements BeanPostProcesso
     private void registerCounterMonitor(String monitorName) {
         log.info("Register counter monitor with name {}", monitorName);
         Counter counter = new BasicCounter(MonitorConfig.builder(monitorName).build());
-        metricKeeper.getCounterMetrics().put(monitorName, counter);
+        metricKeeper.getCounterMonitors().put(monitorName, counter);
         DefaultMonitorRegistry.getInstance().register(counter);
     }
 

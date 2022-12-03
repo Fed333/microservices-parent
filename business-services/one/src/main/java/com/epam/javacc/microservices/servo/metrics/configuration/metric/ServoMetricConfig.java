@@ -1,8 +1,11 @@
 package com.epam.javacc.microservices.servo.metrics.configuration.metric;
 
+import com.epam.javacc.microservices.servo.metrics.metric.MetricLogger;
+import com.epam.javacc.microservices.servo.metrics.metric.observer.LogMetricObserver;
 import com.netflix.servo.publish.BasicMetricFilter;
-import com.netflix.servo.publish.MemoryMetricObserver;
 import com.netflix.servo.publish.MetricFilter;
+import com.netflix.servo.publish.MetricObserver;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +14,10 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class ServoMetricConfig {
+
+    private final MetricLogger metricLogger;
 
     @PostConstruct
     private void init() {
@@ -20,13 +26,13 @@ public class ServoMetricConfig {
 
     @Bean
     public MetricFilter basicMetricFilter() {
-        return new BasicMetricFilter(true);
+        return new BasicMetricFilter(true) ;
     }
 
     @Bean
-    public MemoryMetricObserver basicMemoryObserver() {
-        log.info("ServoMetricConfig#basicMemoryObserver invoked");
-        return new MemoryMetricObserver();
+    public MetricObserver basicMetricObserver() {
+        log.info("ServoMetricConfig#basicMetricObserver invoked");
+        return new LogMetricObserver(metricLogger);
     }
 
 }

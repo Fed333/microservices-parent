@@ -1,17 +1,13 @@
 package com.epam.javacc.microservices.servo.metrics.metric;
 
-import com.netflix.servo.Metric;
 import com.netflix.servo.monitor.BasicTimer;
 import com.netflix.servo.monitor.Counter;
-import com.netflix.servo.monitor.Timer;
-import com.netflix.servo.publish.MemoryMetricObserver;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,13 +16,13 @@ import java.util.Map;
 public class MetricKeeper {
 
     @Getter
-    private final Map<String, Counter> counterMetrics = new HashMap<>();
+    private final Map<String, Counter> counterMonitors = new HashMap<>();
 
     @Getter
     private final Map<String, BasicTimer> timerMonitors = new HashMap<>();
 
     @Autowired
-    private MemoryMetricObserver observer;
+    private MetricLogger metricLogger;
 
     @PostConstruct
     private void init() {
@@ -34,12 +30,7 @@ public class MetricKeeper {
     }
 
     public Counter getCounter(String name) {
-        //TODO extract this demo observer code to something meaningful
-        Metric metric = observer.getObservations().stream().flatMap(Collection::stream)
-                .filter(m -> m.getConfig().getName().equals(name))
-                .findFirst().orElse(null);
-        log.info("Metric {}", metric);
-        return counterMetrics.get(name);
+        return counterMonitors.get(name);
     }
 
     public BasicTimer getTimer(String name) {
