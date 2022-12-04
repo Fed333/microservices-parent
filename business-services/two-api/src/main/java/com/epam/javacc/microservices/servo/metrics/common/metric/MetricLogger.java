@@ -1,4 +1,4 @@
-package com.epam.javacc.microservices.servo.metrics.metric;
+package com.epam.javacc.microservices.servo.metrics.common.metric;
 
 import com.netflix.servo.Metric;
 import lombok.RequiredArgsConstructor;

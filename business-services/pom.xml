@@ -19,6 +19,7 @@
     <modules>
         <module>one</module>
         <module>common</module>
+        <module>two-api</module>
     </modules>
 
     

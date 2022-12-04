@@ -1,7 +1,8 @@
-package com.epam.javacc.microservices.servo.metrics.metric;
+package com.epam.javacc.microservices.servo.metrics.common.metric;
 
 import com.netflix.servo.Metric;
 import com.netflix.servo.tag.TagList;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,18 +10,27 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
-import static com.epam.javacc.microservices.servo.metrics.configuration.metric.PollSchedulerConfig.SERVO_POLLERS;
+import static com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorRegister.REGISTRY_TAG_KEY;
+import static com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorRegister.REGISTRY_TAG_VALUE;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 
 @Component
 public class MetricExtractor {
 
+    private final double servoPollers;
+
+    MetricExtractor(@Value("${servo.pollers}") Double servoPollers) {
+        this.servoPollers = servoPollers;
+    }
+
     @SuppressWarnings("unchecked")
     public Map<String, Map<String,Object>> extractMetricsMapPerEndpoint(List<Metric> metrics) {
         return metrics.stream()
+                .filter(this::isEndpointMonitorMetric)
                 .collect(groupingBy(m -> m.getConfig().getName()))
-                .entrySet().stream().map(e -> new Object[]{
+                .entrySet().stream()
+                .map(e -> new Object[]{
                         e.getKey(),
                         e.getValue().stream()
                                 .map(this::mapMetric)
@@ -31,7 +41,7 @@ public class MetricExtractor {
 
     private Object[] mapMetric(Metric m) {
         TagList tags = m.getConfig().getTags();
-        if (tags.containsKey("type") && tags.getValue("type").equals("COUNTER")) {
+        if (isTotalCountMonitor(tags)) {
             return new Object[]{
                     "totalCount",
                     m.getValue()
@@ -41,7 +51,7 @@ public class MetricExtractor {
             //we need to multiply totalTime by servo.pollers interval (in seconds)
             return new Object[] {
                     "totalExecutionTime",
-                    m.getNumberValue().doubleValue() * SERVO_POLLERS + " ms."
+                    m.getNumberValue().doubleValue() * servoPollers + " ms."
             };
         } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("max")) {
             return new Object[] {
@@ -51,10 +61,19 @@ public class MetricExtractor {
         } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("count")) {
             return new Object[] {
                     "count",
-                    Math.round(m.getNumberValue().doubleValue() * SERVO_POLLERS)
+                    Math.round(m.getNumberValue().doubleValue() * servoPollers)
             };
         }
         return null;
+    }
+
+    private static boolean isTotalCountMonitor(TagList tags) {
+        return tags.containsKey("type") && tags.getValue("type").equals("COUNTER");
+    }
+
+    private boolean isEndpointMonitorMetric(Metric metric) {
+        return  metric.getConfig().getTags().containsKey(REGISTRY_TAG_KEY) &&
+                metric.getConfig().getTags().getValue(REGISTRY_TAG_KEY).equals(REGISTRY_TAG_VALUE);
     }
 
 }

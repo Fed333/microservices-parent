@@ -1,9 +1,11 @@
 package com.epam.javacc.microservices.servo.metrics.controller;
 
 
-import com.epam.javacc.microservices.servo.metrics.metric.MetricKeeper;
+import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorsKeeper;
+import com.epam.javacc.microservices.servo.metrics.configuration.monitor.MonitorsFacade;
 import com.epam.javacc.microservices.servo.metrics.utils.MapUtils;
 import com.netflix.servo.monitor.BasicTimer;
+import com.netflix.servo.monitor.Counter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +20,13 @@ import java.util.Objects;
 @RequestMapping("/service-one/metrics")
 public class MetricController {
 
-    private final MetricKeeper metricKeeper;
+//    private final MonitorsKeeper metricKeeper;
+
+    private final MonitorsFacade monitorsFacade;
 
     @GetMapping("/counter")
     public Map<String, Object> getCounterMetric(@RequestParam(name = "name") String name) {
-        long count = metricKeeper.getCounter(name).getValue().longValue();
+        long count = monitorsFacade.getCounter(name).getValue().longValue();
         return MapUtils.createMap(new Object[][]{
                 {"method", name},
                 {"count", count}
@@ -31,7 +35,7 @@ public class MetricController {
 
     @GetMapping("/timer")
     public Map<String, Object> getTimerMetric(@RequestParam(name = "name") String name) {
-        BasicTimer timer = metricKeeper.getTimer(name);
+        BasicTimer timer = monitorsFacade.getTimer(name);
         if (Objects.nonNull(timer)) {
             if (timer.getCount() == 0){
                 return MapUtils.createMap(new Object[][]{

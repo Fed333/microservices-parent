@@ -1,7 +1,6 @@
 package com.epam.javacc.microservices.servo.metrics.configuration.interceptor;
 
-import com.epam.javacc.microservices.servo.metrics.metric.MetricKeeper;
-import com.netflix.servo.monitor.Counter;
+import com.epam.javacc.microservices.servo.metrics.configuration.monitor.MonitorsFacade;
 import com.netflix.servo.monitor.Stopwatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class ControllerMetricsInterceptor implements HandlerInterceptor {
 
-    private final MetricKeeper metricKeeper;
+    private final MonitorsFacade monitorsFacade;
 
     private final ThreadLocal<Stopwatch> stopwatchThreadLocal = new ThreadLocal<>();
 
@@ -26,12 +25,12 @@ public class ControllerMetricsInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("[BEGIN] {} {}", request.getMethod(), request.getRequestURI());
         String metricName = buildMetricName(request);
-        Optional.ofNullable(metricKeeper.getCounter(metricName)).ifPresent(c->{
+        Optional.ofNullable(monitorsFacade.getCounter(metricName)).ifPresent(c->{
             log.info("Increment {} by one", metricName);
             c.increment();
         });
 
-        Optional.ofNullable(metricKeeper.getTimer(metricName)).ifPresent(t->{
+        Optional.ofNullable(monitorsFacade.getTimer(metricName)).ifPresent(t->{
             log.info("Timer start of execution {}...", metricName);
             stopwatchThreadLocal.set(t.start());
         });
@@ -45,7 +44,7 @@ public class ControllerMetricsInterceptor implements HandlerInterceptor {
             stopwatch.stop();
             log.info("Timer end of execution {}.", buildMetricName(request));
             log.info("Duration: {} ms.", stopwatch.getDuration(TimeUnit.MILLISECONDS));
-            log.info("Total time: {} ms.", metricKeeper.getTimer(buildMetricName(request)).getTotalTime());
+            log.info("Total time: {} ms.", monitorsFacade.getTimer(buildMetricName(request)).getTotalTime());
             stopwatchThreadLocal.set(null);
         }
         log.info("[END] {} {}", request.getMethod(), request.getRequestURI());

@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "servo.pollers",
+      "type": "java.lang.String",
+      "description": "Constant which establish the metrics polling interval."
+  }
+  ]
+}

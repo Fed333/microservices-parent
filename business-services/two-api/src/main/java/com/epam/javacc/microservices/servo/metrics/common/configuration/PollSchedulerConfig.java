@@ -1,8 +1,9 @@
-package com.epam.javacc.microservices.servo.metrics.configuration.metric;
+package com.epam.javacc.microservices.servo.metrics.common.configuration;
 
 import com.netflix.servo.publish.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
@@ -19,7 +20,8 @@ public class PollSchedulerConfig {
     /**
      * Polling interval in seconds.
      * */
-    public static final int SERVO_POLLERS = 30;
+    @Value("${servo.pollers}")
+    private Long servoPollers;
 
     private final MetricFilter basicMetricFilter;
 
@@ -28,12 +30,11 @@ public class PollSchedulerConfig {
     @PostConstruct
     private void init() {
         log.info("PollSchedulerConfig#init invoked");
-//        System.setProperty("servo.pollers", "600000");
-        System.setProperty("servo.pollers", String.valueOf(SERVO_POLLERS * 1000));
+        System.setProperty("servo.pollers", String.valueOf(servoPollers));
         PollScheduler.getInstance().start();
 
         PollRunnable task = new PollRunnable(new MonitorRegistryMetricPoller(), basicMetricFilter, basicMetricObserver);
-        PollScheduler.getInstance().addPoller(task, SERVO_POLLERS, TimeUnit.SECONDS);
+        PollScheduler.getInstance().addPoller(task, servoPollers, TimeUnit.MILLISECONDS);
     }
 
     @PreDestroy

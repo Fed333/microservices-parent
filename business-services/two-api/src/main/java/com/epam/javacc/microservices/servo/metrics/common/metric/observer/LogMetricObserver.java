@@ -1,6 +1,6 @@
-package com.epam.javacc.microservices.servo.metrics.metric.observer;
+package com.epam.javacc.microservices.servo.metrics.common.metric.observer;
 
-import com.epam.javacc.microservices.servo.metrics.metric.MetricLogger;
+import com.epam.javacc.microservices.servo.metrics.common.metric.MetricLogger;
 import com.netflix.servo.Metric;
 import com.netflix.servo.publish.BaseMetricObserver;
 import org.springframework.stereotype.Component;

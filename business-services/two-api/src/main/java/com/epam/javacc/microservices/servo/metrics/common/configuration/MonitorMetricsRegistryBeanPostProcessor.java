@@ -1,27 +1,25 @@
-package com.epam.javacc.microservices.servo.metrics.configuration.metric;
+package com.epam.javacc.microservices.servo.metrics.common.configuration;
 
-import com.epam.javacc.microservices.servo.metrics.metric.MetricKeeper;
-import com.netflix.servo.DefaultMonitorRegistry;
-import com.netflix.servo.monitor.BasicCounter;
-import com.netflix.servo.monitor.BasicTimer;
-import com.netflix.servo.monitor.Counter;
-import com.netflix.servo.monitor.MonitorConfig;
+import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorRegister;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class MonitorMetricsRegistryBeanPostProcessor implements BeanPostProcessor {
 
-    private final MetricKeeper metricKeeper;
+    @Autowired(required = false)
+    private Optional<List<MonitorRegister>> registers;
 
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -41,9 +39,20 @@ public class MonitorMetricsRegistryBeanPostProcessor implements BeanPostProcesso
     private void registerMonitors(Object bean, String path) {
         for (Method method : bean.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(GetMapping.class)){
-                registerMonitor("GET", path, method.getAnnotation(GetMapping.class).value());
+                registerMonitor("GET", path, method.getAnnotation(GetMapping.class).path());
             } else if (method.isAnnotationPresent(PostMapping.class)) {
-                registerMonitor("POST", path, method.getAnnotation(PostMapping.class).value());
+                registerMonitor("POST", path, method.getAnnotation(PostMapping.class).path());
+            } else if (method.isAnnotationPresent(PutMapping.class)) {
+                registerMonitor("PUT", path, method.getAnnotation(PutMapping.class).path());
+            } else if (method.isAnnotationPresent(PatchMapping.class)) {
+                registerMonitor("PATCH", path, method.getAnnotation(PatchMapping.class).path());
+            } else if (method.isAnnotationPresent(DeleteMapping.class)) {
+                registerMonitor("DELETE", path, method.getAnnotation(DeleteMapping.class).path());
+            } else if (method.isAnnotationPresent(RequestMapping.class)) {
+                RequestMapping req = method.getAnnotation(RequestMapping.class);
+                for (RequestMethod rm : req.method()) {
+                    registerMonitor(rm.name(), path,  req.path());
+                }
             }
         }
     }
@@ -61,22 +70,7 @@ public class MonitorMetricsRegistryBeanPostProcessor implements BeanPostProcesso
     }
 
     private void registerMonitor(String monitorName) {
-        registerCounterMonitor(monitorName);
-        registerTimerMonitor(monitorName);
-    }
-
-    private void registerCounterMonitor(String monitorName) {
-        log.info("Register counter monitor with name {}", monitorName);
-        Counter counter = new BasicCounter(MonitorConfig.builder(monitorName).build());
-        metricKeeper.getCounterMonitors().put(monitorName, counter);
-        DefaultMonitorRegistry.getInstance().register(counter);
-    }
-
-    private void registerTimerMonitor(String monitorName) {
-        log.info("Register timer monitor with name {}", monitorName);
-        BasicTimer timer = new BasicTimer(MonitorConfig.builder(monitorName).build(), TimeUnit.MILLISECONDS);
-        metricKeeper.getTimerMonitors().put(monitorName, timer);
-        DefaultMonitorRegistry.getInstance().register(timer);
+        registers.ifPresent(l -> l.forEach(r -> r.registerMonitor(monitorName)));
     }
 
     @Override
