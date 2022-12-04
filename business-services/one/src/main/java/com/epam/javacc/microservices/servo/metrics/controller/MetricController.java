@@ -1,11 +1,9 @@
 package com.epam.javacc.microservices.servo.metrics.controller;
 
 
-import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorsKeeper;
+import com.epam.javacc.microservices.servo.metrics.common.utils.MapUtils;
 import com.epam.javacc.microservices.servo.metrics.configuration.monitor.MonitorsFacade;
-import com.epam.javacc.microservices.servo.metrics.utils.MapUtils;
 import com.netflix.servo.monitor.BasicTimer;
-import com.netflix.servo.monitor.Counter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,7 +1,7 @@
 package com.epam.javacc.microservices.servo.metrics.service;
 
-import com.epam.javacc.microservices.servo.metrics.utils.DataTimeUtils;
-import com.epam.javacc.microservices.servo.metrics.utils.MapUtils;
+import com.epam.javacc.microservices.servo.metrics.common.utils.DataTimeUtils;
+import com.epam.javacc.microservices.servo.metrics.common.utils.MapUtils;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
