@@ -20,7 +20,7 @@ public class ServiceOneController {
        return oneService.getLinks();
     }
 
-    @GetMapping("/info")
+    @GetMapping(path = "/info")
     @ResponseStatus(HttpStatus.OK)
     public Map<String,String> getAuthorsInfo() {
         return oneService.getAuthorsInfo();
