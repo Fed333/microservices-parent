@@ -1,7 +1,8 @@
-package com.epam.javacc.microservices.servo.metrics.configuration.monitor;
+package com.epam.javacc.microservices.servo.metrics.configuration.monitor.register;
 
 import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorRegister;
 import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorsKeeper;
+import com.epam.javacc.microservices.servo.metrics.configuration.metric.CommonMetricExtractor;
 import com.netflix.servo.DefaultMonitorRegistry;
 import com.netflix.servo.monitor.BasicTimer;
 import com.netflix.servo.monitor.MonitorConfig;
@@ -10,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
+
+import static com.epam.javacc.microservices.servo.metrics.configuration.metric.CommonMetricExtractor.REGISTRY_TAG_VALUE;
+
 /**
  * Class for registering {@link BasicTimer} monitor metrics to the application.
  * @author Roman_Kovalchuk
@@ -24,7 +28,7 @@ public class TimerMonitorRegister implements MonitorRegister {
     @Override
     public void registerMonitor(String monitorName) {
         log.info("Register timer monitor with name {}", monitorName);
-        BasicTimer timer = new BasicTimer(MonitorConfig.builder(monitorName).withTag(REGISTRY_TAG_KEY, REGISTRY_TAG_VALUE).build(), TimeUnit.MILLISECONDS);
+        BasicTimer timer = new BasicTimer(MonitorConfig.builder(monitorName).withTag(CommonMetricExtractor.REGISTRY_TAG_KEY, REGISTRY_TAG_VALUE).build(), TimeUnit.MILLISECONDS);
         monitorsKeeper.putMonitor(monitorName, BasicTimer.class, timer);
         DefaultMonitorRegistry.getInstance().register(timer);
         log.info("Register counter monitor with name {}", monitorName);

@@ -18,8 +18,6 @@ import java.util.Objects;
 @RequestMapping("/service-one/metrics")
 public class MetricController {
 
-//    private final MonitorsKeeper metricKeeper;
-
     private final MonitorsFacade monitorsFacade;
 
     @GetMapping("/counter")

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,19 +40,19 @@ public class MonitorMetricsRegistryBeanPostProcessor implements BeanPostProcesso
     private void registerMonitors(Object bean, String path) {
         for (Method method : bean.getClass().getDeclaredMethods()) {
             if (method.isAnnotationPresent(GetMapping.class)){
-                registerMonitor("GET", path, method.getAnnotation(GetMapping.class).path());
+                registerMonitor("GET", path, getMappedUrls(method.getAnnotation(GetMapping.class).value(), method.getAnnotation(GetMapping.class).path()));
             } else if (method.isAnnotationPresent(PostMapping.class)) {
-                registerMonitor("POST", path, method.getAnnotation(PostMapping.class).path());
+                registerMonitor("POST", path, getMappedUrls(method.getAnnotation(PostMapping.class).value(), method.getAnnotation(PostMapping.class).path()));
             } else if (method.isAnnotationPresent(PutMapping.class)) {
-                registerMonitor("PUT", path, method.getAnnotation(PutMapping.class).path());
+                registerMonitor("PUT", path, getMappedUrls(method.getAnnotation(PutMapping.class).value(), method.getAnnotation(PutMapping.class).path()));
             } else if (method.isAnnotationPresent(PatchMapping.class)) {
-                registerMonitor("PATCH", path, method.getAnnotation(PatchMapping.class).path());
+                registerMonitor("PATCH", path, getMappedUrls(method.getAnnotation(PatchMapping.class).value(), method.getAnnotation(PatchMapping.class).path()));
             } else if (method.isAnnotationPresent(DeleteMapping.class)) {
-                registerMonitor("DELETE", path, method.getAnnotation(DeleteMapping.class).path());
+                registerMonitor("DELETE", path, getMappedUrls(method.getAnnotation(DeleteMapping.class).value(), method.getAnnotation(DeleteMapping.class).path()));
             } else if (method.isAnnotationPresent(RequestMapping.class)) {
                 RequestMapping req = method.getAnnotation(RequestMapping.class);
                 for (RequestMethod rm : req.method()) {
-                    registerMonitor(rm.name(), path,  req.path());
+                    registerMonitor(rm.name(), path,  getMappedUrls(req.value(), req.path()));
                 }
             }
         }
@@ -71,6 +72,16 @@ public class MonitorMetricsRegistryBeanPostProcessor implements BeanPostProcesso
 
     private void registerMonitor(String monitorName) {
         registers.ifPresent(l -> l.forEach(r -> r.registerMonitor(monitorName)));
+    }
+
+    /**
+     * Gives the array with mapped urls, which is used in mapping declaration.
+     * @param value array declared using value attribute of mapped annotation
+     * @param path array declared using path attribute of mapped annotation
+     * @return not empty array if such exists
+     * */
+    private String[] getMappedUrls(String[] value, String[] path) {
+        return value.length != 0 ? value : path;
     }
 
     @Override
