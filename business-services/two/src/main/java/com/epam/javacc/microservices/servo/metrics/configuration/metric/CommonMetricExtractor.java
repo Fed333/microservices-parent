@@ -42,24 +42,26 @@ public class CommonMetricExtractor extends AbstractMetricExtractor {
                     m.getNumberValue().doubleValue()*TimeUnit.MILLISECONDS.toSeconds(servoPollers)
             };
         } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("totalTime")) {
-            //to obtain total method execution time within the polling interval
-            //we need to multiply totalTime by servo.pollers interval (in seconds)
             return new Object[] {
-                    "totalExecutionTime",
-                    m.getNumberValue().doubleValue() * TimeUnit.MILLISECONDS.toSeconds(servoPollers) + " ms."
+                    "totalTime",
+                    m.getNumberValue().doubleValue() + " ms."
+            };
+        } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("avg")) {
+            return new Object[] {
+                    "averageTime",
+                    m.getNumberValue().doubleValue() + " ms."
             };
         } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("max")) {
             return new Object[] {
                     "maxExecutionTime",
                     m.getValue() + " ms."
             };
+        } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("min")) {
+            return new Object[] {
+                    "minExecutionTime",
+                    m.getValue() + " ms."
+            };
         }
-//        else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("count")) {
-//            return new Object[] {
-//                    "count",
-//                    Math.round(m.getNumberValue().doubleValue() * TimeUnit.MILLISECONDS.toSeconds(servoPollers))
-//            };
-//        }
         return null;
     }
 

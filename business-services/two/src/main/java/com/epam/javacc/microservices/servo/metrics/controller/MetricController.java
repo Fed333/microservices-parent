@@ -4,6 +4,7 @@ package com.epam.javacc.microservices.servo.metrics.controller;
 import com.epam.javacc.microservices.servo.metrics.common.utils.MapUtils;
 import com.epam.javacc.microservices.servo.metrics.configuration.monitor.MonitorsFacade;
 import com.netflix.servo.monitor.BasicTimer;
+import com.netflix.servo.monitor.StatsTimer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,7 @@ public class MetricController {
 
     @GetMapping("/timer")
     public Map<String, Object> getTimerMetric(@RequestParam(name = "name") String name) {
-        BasicTimer timer = monitorsFacade.getTimer(name);
+        StatsTimer timer = monitorsFacade.getTimer(name);
         if (Objects.nonNull(timer)) {
             if (timer.getCount() == 0){
                 return MapUtils.createMap(new Object[][]{
@@ -48,12 +49,10 @@ public class MetricController {
                         {"message", "This method hasn't been invoked yet in this metric interval!"}
                 });
             } else {
-                double avgTime = timer.getTotalTime() / timer.getCount();
-                double maxTime = timer.getMax();
+                double avgTime = (double)timer.getTotalTime() / timer.getCount();
                 return MapUtils.createMap(new Object[][]{
                         {"method", name},
-                        {"averageTime", String.format("%.2f", avgTime) + " ms."},
-                        {"maximumTime", String.format("%.2f", maxTime) + " ms."},
+                        {"averageTime", String.format("%.2f", avgTime) + " ms."}
                 });
             }
         }
