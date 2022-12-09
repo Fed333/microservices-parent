@@ -1,6 +1,7 @@
 package com.epam.javacc.microservices.servo.metrics.common.metric.extractor;
 
 import com.netflix.servo.Metric;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.List;
 import java.util.Map;

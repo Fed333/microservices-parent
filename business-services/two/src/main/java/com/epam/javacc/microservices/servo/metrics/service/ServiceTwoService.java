@@ -34,7 +34,6 @@ public class ServiceTwoService {
         return DataTimeUtils.getCurrentTimestamp();
     }
     public Map<String, Object> getLinks() {
-        randomSleep(0, 250);
         String timestamp = getCurrentTimestamp();
         return MapUtils.createMap(new Object[][]{
                 {"_links", MapUtils.createMap(new Object[][]{

@@ -5,6 +5,8 @@ import com.epam.javacc.microservices.servo.metrics.common.utils.MapUtils;
 import com.epam.javacc.microservices.servo.metrics.configuration.monitor.MonitorsFacade;
 import com.netflix.servo.monitor.BasicTimer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,17 +14,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/service-two/metrics")
 public class MetricController {
 
+    @Value("${servo.pollers}")
+    private Long servoPollers;
+
     private final MonitorsFacade monitorsFacade;
 
     @GetMapping("/counter")
     public Map<String, Object> getCounterMetric(@RequestParam(name = "name") String name) {
-        long count = monitorsFacade.getCounter(name).getValue().longValue();
+        log.info("stepCounter: {}", monitorsFacade.getCounter(name).getValue().doubleValue());
+        double count = monitorsFacade.getCounter(name).getValue().doubleValue() * TimeUnit.MILLISECONDS.toSeconds(servoPollers);
+
         return MapUtils.createMap(new Object[][]{
                 {"method", name},
                 {"count", count}

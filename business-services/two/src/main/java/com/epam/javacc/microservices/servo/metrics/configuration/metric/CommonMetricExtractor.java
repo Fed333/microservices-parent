@@ -1,6 +1,5 @@
 package com.epam.javacc.microservices.servo.metrics.configuration.metric;
 
-import com.epam.javacc.microservices.servo.metrics.common.configuration.MonitorMetricsRegistryBeanPostProcessor;
 import com.epam.javacc.microservices.servo.metrics.common.metric.extractor.AbstractMetricExtractor;
 import com.netflix.servo.Metric;
 import com.netflix.servo.tag.TagList;
@@ -8,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
+
+import static com.epam.javacc.microservices.servo.metrics.configuration.monitor.CounterMonitorRegister.COUNTER_TAG;
+import static com.epam.javacc.microservices.servo.metrics.configuration.monitor.CounterMonitorRegister.COUNTER_TAG_VALUE;
 
 @Component
 public class CommonMetricExtractor extends AbstractMetricExtractor {
@@ -20,8 +22,11 @@ public class CommonMetricExtractor extends AbstractMetricExtractor {
     /**
      * Special constant value, to identify which metrics should be extracted
      * */
-    public static String REGISTRY_TAG_VALUE = MonitorMetricsRegistryBeanPostProcessor.class.getName();
+    public static String REGISTRY_TAG_VALUE = CommonMetricExtractor.class.getName();
 
+    /**
+     * Polling metric interval in milliseconds.
+     * */
     private final Long servoPollers;
 
     CommonMetricExtractor(@Value("${servo.pollers}") Long servoPollers) {
@@ -31,10 +36,10 @@ public class CommonMetricExtractor extends AbstractMetricExtractor {
 
     protected Object[] mapMetric(Metric m) {
         TagList tags = m.getConfig().getTags();
-        if (isTotalCountMonitor(tags)) {
+        if (isCountMonitor(tags)) {
             return new Object[]{
-                    "totalCount",
-                    m.getValue()
+                    "stepCount",
+                    m.getNumberValue().doubleValue()*TimeUnit.MILLISECONDS.toSeconds(servoPollers)
             };
         } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("totalTime")) {
             //to obtain total method execution time within the polling interval
@@ -48,17 +53,18 @@ public class CommonMetricExtractor extends AbstractMetricExtractor {
                     "maxExecutionTime",
                     m.getValue() + " ms."
             };
-        } else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("count")) {
-            return new Object[] {
-                    "count",
-                    Math.round(m.getNumberValue().doubleValue() * TimeUnit.MILLISECONDS.toSeconds(servoPollers))
-            };
         }
+//        else if (tags.containsKey("statistic") && tags.getValue("statistic").equals("count")) {
+//            return new Object[] {
+//                    "count",
+//                    Math.round(m.getNumberValue().doubleValue() * TimeUnit.MILLISECONDS.toSeconds(servoPollers))
+//            };
+//        }
         return null;
     }
 
-    private static boolean isTotalCountMonitor(TagList tags) {
-        return tags.containsKey("type") && tags.getValue("type").equals("COUNTER");
+    private static boolean isCountMonitor(TagList tags) {
+        return tags.containsKey(COUNTER_TAG) && tags.getValue(COUNTER_TAG).equals(COUNTER_TAG_VALUE);
     }
 
     @Override

@@ -31,6 +31,7 @@ public class PollSchedulerConfig {
     private void init() {
         log.info("PollSchedulerConfig#init invoked");
         System.setProperty("servo.pollers", String.valueOf(servoPollers));
+        log.info("Set servo pollers to: {} ms.", servoPollers);
         PollScheduler.getInstance().start();
 
         PollRunnable task = new PollRunnable(new MonitorRegistryMetricPoller(), basicMetricFilter, basicMetricObserver);

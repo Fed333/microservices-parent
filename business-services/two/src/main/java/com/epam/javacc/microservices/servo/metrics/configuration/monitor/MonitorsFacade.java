@@ -3,6 +3,8 @@ package com.epam.javacc.microservices.servo.metrics.configuration.monitor;
 import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorsKeeper;
 import com.netflix.servo.monitor.BasicCounter;
 import com.netflix.servo.monitor.BasicTimer;
+import com.netflix.servo.monitor.PeakRateCounter;
+import com.netflix.servo.monitor.StepCounter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +18,8 @@ public class MonitorsFacade {
 
     private final MonitorsKeeper monitorsKeeper;
 
-    public BasicCounter getCounter(String name) {
-        return monitorsKeeper.getMonitor(name, BasicCounter.class);
+    public StepCounter getCounter(String name) {
+        return monitorsKeeper.getMonitor(name, StepCounter.class);
     }
 
     public BasicTimer getTimer(String name) {
