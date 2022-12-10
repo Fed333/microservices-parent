@@ -1,4 +1,4 @@
-package com.epam.javacc.microservices.servo.metrics.utils;
+package com.epam.javacc.microservices.servo.metrics.common.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

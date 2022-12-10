@@ -1,4 +1,4 @@
-package com.epam.javacc.microservices.servo.metrics.utils;
+package com.epam.javacc.microservices.servo.metrics.common.utils;
 
 import java.util.Map;
 import java.util.stream.Stream;
