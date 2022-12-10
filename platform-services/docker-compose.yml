@@ -4,3 +4,9 @@ services:
     build: ../platform-services/discovery/target
     ports:
       - "8761:8761"
+  apigateway:
+    build: ../platform-services/api-gateway/target
+    ports:
+      - "9393:9393"
+    links:
+      - discovery
