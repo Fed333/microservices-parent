@@ -1,6 +1,6 @@
 package com.epam.javacc.microservices.servo.metrics.controller;
 
-import com.epam.javacc.microservices.servo.metrics.service.ServiceOneService;
+import com.epam.javacc.microservices.servo.metrics.service.ServiceTwoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/service-one")
+@RequestMapping("/service-two")
 @RequiredArgsConstructor
-public class ServiceOneController {
+public class ServiceTwoController {
 
-    private final ServiceOneService oneService;
+    private final ServiceTwoService oneService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -20,7 +20,7 @@ public class ServiceOneController {
        return oneService.getLinks();
     }
 
-    @GetMapping(path = "/info")
+    @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)
     public Map<String,String> getAuthorsInfo() {
         return oneService.getAuthorsInfo();

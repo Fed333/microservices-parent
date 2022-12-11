@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-public class ServiceOneService {
+public class ServiceTwoService {
 
     public Map<String,Object> handlePost() {
-        randomSleep(1000, 4000);
+        randomSleep(100, 1000);
         String timestamp = getCurrentTimestamp();
         return MapUtils.createMap(new String[][]{
                 {"message", "post request was accepted!"},
@@ -21,10 +21,10 @@ public class ServiceOneService {
     }
 
     public Map<String, String> getAuthorsInfo() {
-        randomSleep(200, 2000);
+        randomSleep(200, 500);
         String timestamp = getCurrentTimestamp();
         return MapUtils.createMap(new String[][]{
-                {"service", "service-one"},
+                {"service", "service-two"},
                 {"author", "Roman Kovalchuk"},
                 {"timestamp", timestamp}
         });
@@ -34,11 +34,10 @@ public class ServiceOneService {
         return DataTimeUtils.getCurrentTimestamp();
     }
     public Map<String, Object> getLinks() {
-        randomSleep(0, 100);
         String timestamp = getCurrentTimestamp();
         return MapUtils.createMap(new Object[][]{
                 {"_links", MapUtils.createMap(new Object[][]{
-                        {"info", "http://localhost:9393/business-services/two/info"}
+                        {"info", "http://localhost:9393/business-services/one/info"}
                 })},
                 {"timestamp", timestamp}
         });

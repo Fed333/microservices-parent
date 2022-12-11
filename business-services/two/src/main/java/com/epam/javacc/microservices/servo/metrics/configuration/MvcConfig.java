@@ -1,6 +1,5 @@
 package com.epam.javacc.microservices.servo.metrics.configuration;
 
-import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorsKeeper;
 import com.epam.javacc.microservices.servo.metrics.configuration.interceptor.ControllerMetricsInterceptor;
 import com.epam.javacc.microservices.servo.metrics.configuration.monitor.MonitorsFacade;
 import lombok.RequiredArgsConstructor;

@@ -13,6 +13,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 @Slf4j
 @RequiredArgsConstructor
 public class ControllerMetricsInterceptor implements HandlerInterceptor {
@@ -28,6 +30,7 @@ public class ControllerMetricsInterceptor implements HandlerInterceptor {
         Optional.ofNullable(monitorsFacade.getCounter(metricName)).ifPresent(c->{
             log.info("Increment {} by one", metricName);
             c.increment();
+            log.info("counterValue: {}", c.getValue().doubleValue());
         });
 
         Optional.ofNullable(monitorsFacade.getTimer(metricName)).ifPresent(t->{

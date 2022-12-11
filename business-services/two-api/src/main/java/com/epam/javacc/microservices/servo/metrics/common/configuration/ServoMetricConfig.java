@@ -1,7 +1,7 @@
-package com.epam.javacc.microservices.servo.metrics.configuration.metric;
+package com.epam.javacc.microservices.servo.metrics.common.configuration;
 
-import com.epam.javacc.microservices.servo.metrics.metric.MetricLogger;
-import com.epam.javacc.microservices.servo.metrics.metric.observer.LogMetricObserver;
+import com.epam.javacc.microservices.servo.metrics.common.metric.MetricLogger;
+import com.epam.javacc.microservices.servo.metrics.common.metric.observer.LogMetricObserver;
 import com.netflix.servo.publish.BasicMetricFilter;
 import com.netflix.servo.publish.MetricFilter;
 import com.netflix.servo.publish.MetricObserver;
