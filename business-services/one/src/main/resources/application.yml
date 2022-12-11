@@ -1,0 +1,4 @@
+server:
+  port: 8081
+servo:
+  pollers: 30000
