@@ -27,6 +27,7 @@
 
   <modules>
     <module>platform-services</module>
+    <module>business-services</module>
   </modules>
 
 </project>
