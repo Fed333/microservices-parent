@@ -16,7 +16,6 @@ services:
       - discovery
   tenant1:
     image: postgres:13.3
-#    build: ../business-services/common/target
     environment:
       POSTGRES_DB: "tenant1"
       POSTGRES_USER: "postgres"
@@ -24,8 +23,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      -  ~/PostgreSQL/tenants/db/init/tenant1:/docker-entrypoint-initdb.d
-#      - $PWD/../business-services/common/src/main/resources/db/init/tenant1:/docker-entrypoint-initdb.d
+      - ~/PostgreSQL/tenants/db/init/tenant1:/docker-entrypoint-initdb.d
+      - tenant1:/var/lib/postgresql/data
   tenant2:
     image: postgres:13.3
     environment:
@@ -35,7 +34,17 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      -  ~/PostgreSQL/tenants/db/init/tenant2:/docker-entrypoint-initdb.d
+      - ~/PostgreSQL/tenants/db/init/tenant2:/docker-entrypoint-initdb.d
+      - tenant2:/var/lib/postgresql/data
+  common:
+    build: ../business-services/common/target
+    ports:
+      - "8001:8001"
+    volumes:
+      - ~/.m2/repository:/root/.m2/repository
+    links:
+      - tenant1
+      - tenant2
 
 volumes:
   tenant1:
