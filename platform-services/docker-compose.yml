@@ -9,7 +9,7 @@ services:
   apigateway:
     build: ../platform-services/api-gateway/target
     ports:
-      - "9393:9393"
+      - "8765:8765"
     volumes:
       - ~/.m2/repository:/root/.m2/repository
     links:
@@ -45,7 +45,18 @@ services:
     links:
       - tenant1
       - tenant2
-
+  one:
+    build: ../business-services/one/target
+    ports:
+      - "8081:8081"
+    links:
+      - discovery
+  two:
+    build: ../business-services/two/target
+    ports:
+      - "8082:8082"
+    links:
+      - discovery
 volumes:
   tenant1:
   tenant2:

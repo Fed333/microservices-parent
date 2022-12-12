@@ -37,7 +37,7 @@ public class ServiceTwoService {
         String timestamp = getCurrentTimestamp();
         return MapUtils.createMap(new Object[][]{
                 {"_links", MapUtils.createMap(new Object[][]{
-                        {"info", "http://localhost:9393/business-services/one/info"}
+                        {"info", "http://localhost:8765/business-services/one/info"}
                 })},
                 {"timestamp", timestamp}
         });

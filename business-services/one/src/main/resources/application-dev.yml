@@ -7,4 +7,4 @@ eureka:
     appname: "service one"
   client:
     serviceUrl:
-      defaultZone: http://discovery:8761/eureka
+      defaultZone: http://localhost:8761/eureka

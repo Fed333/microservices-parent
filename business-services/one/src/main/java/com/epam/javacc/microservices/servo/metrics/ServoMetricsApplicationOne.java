@@ -7,14 +7,14 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @EnableEurekaClient
 @SpringBootApplication
-public class ServoMetricsApplication {
+public class ServoMetricsApplicationOne {
 
     public static void main(String[] args) {
         //TODO remove hardcode to reading application properties.
         // It's temporarily solution of problem with setting servo.pollers constant.
         // The actual value of metrics refreshing was default all the time.
         System.setProperty("servo.pollers", "30000");
-        SpringApplication.run(ServoMetricsApplication.class, args);
+        SpringApplication.run(ServoMetricsApplicationOne.class, args);
     }
 
 }
