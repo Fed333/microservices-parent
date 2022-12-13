@@ -1,2 +1,11 @@
 # Project exclude paths
 /platform-services/discovery/target/
+/platform-services/api-gateway/target/
+
+/business-services/common/target/
+/.idea/
+/business-services/one/target/
+/business-services/one/logs/
+/business-services/two-api/target/
+/business-services/two/logs/
+/business-services/two/target/

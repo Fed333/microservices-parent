@@ -1,0 +1,70 @@
+version: "3.1"
+services:
+  discovery:
+    build: ../platform-services/discovery/target
+    ports:
+      - "8761:8761"
+    volumes:
+      - ~/.m2/repository:/root/.m2/repository
+  apigateway:
+    build: ../platform-services/api-gateway/target
+    ports:
+      - "8765:8765"
+    volumes:
+      - ~/.m2/repository:/root/.m2/repository
+    links:
+      - discovery
+  tenant1:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "tenant1"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Way_0804"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ~/PostgreSQL/tenants/db/init/tenant1:/docker-entrypoint-initdb.d
+      - tenant1:/var/lib/postgresql/data
+  tenant2:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "tenant2"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "Way_0804"
+    ports:
+      - "5433:5432"
+    volumes:
+      - ~/PostgreSQL/tenants/db/init/tenant2:/docker-entrypoint-initdb.d
+      - tenant2:/var/lib/postgresql/data
+  common:
+    build: ../business-services/common/target
+    ports:
+      - "8001:8001"
+    volumes:
+      - ~/.m2/repository:/root/.m2/repository
+    links:
+      - tenant1
+      - tenant2
+  one:
+    build: ../business-services/one/target
+    ports:
+      - "8081:8081"
+    links:
+      - discovery
+  two:
+    build: ../business-services/two/target
+    ports:
+      - "8082:8082"
+    links:
+      - discovery
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+  graphite:
+    image: graphiteapp/graphite-statsd
+    ports:
+      - "2003:2003"
+volumes:
+  tenant1:
+  tenant2:

@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "servo.pollers",
+      "type": "java.lang.String",
+      "description": "Description for servo.pollers."
+  }
+] }

@@ -1,0 +1,10 @@
+server:
+  port: 8081
+servo:
+  pollers: 30000
+eureka:
+  instance:
+    appname: "service one"
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
