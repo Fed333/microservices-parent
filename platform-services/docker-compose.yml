@@ -43,6 +43,7 @@ services:
     volumes:
       - ~/.m2/repository:/root/.m2/repository
     links:
+      - discovery
       - tenant1
       - tenant2
   one:

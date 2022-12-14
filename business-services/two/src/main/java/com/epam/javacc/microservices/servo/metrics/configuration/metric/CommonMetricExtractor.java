@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.epam.javacc.microservices.servo.metrics.configuration.monitor.CounterMonitorRegister.COUNTER_TAG;
-import static com.epam.javacc.microservices.servo.metrics.configuration.monitor.CounterMonitorRegister.COUNTER_TAG_VALUE;
+import static com.epam.javacc.microservices.servo.metrics.configuration.monitor.register.CounterMonitorRegister.COUNTER_TAG;
+import static com.epam.javacc.microservices.servo.metrics.configuration.monitor.register.CounterMonitorRegister.COUNTER_TAG_VALUE;
 
 @Component
 public class CommonMetricExtractor extends AbstractMetricExtractor {

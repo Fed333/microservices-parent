@@ -1,4 +1,4 @@
-package com.epam.javacc.microservices.servo.metrics.configuration.monitor;
+package com.epam.javacc.microservices.servo.metrics.configuration.monitor.register;
 
 import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorRegister;
 import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorsKeeper;
@@ -6,14 +6,11 @@ import com.netflix.servo.DefaultMonitorRegistry;
 import com.netflix.servo.monitor.BasicTimer;
 import com.netflix.servo.monitor.MonitorConfig;
 import com.netflix.servo.monitor.StatsTimer;
-import com.netflix.servo.monitor.StepCounter;
 import com.netflix.servo.stats.StatsConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 import static com.epam.javacc.microservices.servo.metrics.configuration.metric.CommonMetricExtractor.REGISTRY_TAG_KEY;
 import static com.epam.javacc.microservices.servo.metrics.configuration.metric.CommonMetricExtractor.REGISTRY_TAG_VALUE;
