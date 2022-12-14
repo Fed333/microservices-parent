@@ -1,0 +1,7 @@
+server:
+  port: 8082
+servo:
+  pollers: 20000
+eureka:
+  instance:
+    appname: "service two"
