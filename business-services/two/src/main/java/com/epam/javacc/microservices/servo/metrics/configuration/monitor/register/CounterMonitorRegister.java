@@ -1,4 +1,4 @@
-package com.epam.javacc.microservices.servo.metrics.configuration.monitor;
+package com.epam.javacc.microservices.servo.metrics.configuration.monitor.register;
 
 import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorRegister;
 import com.epam.javacc.microservices.servo.metrics.common.monitor.MonitorsKeeper;
