@@ -7,6 +7,8 @@ services:
     volumes:
       - ~/.m2/repository:/root/.m2/repository
   apigateway:
+    environment:
+      - HOST_NAME=${HOST_NAME}
     build: ../platform-services/api-gateway/target
     ports:
       - "8765:8765"
@@ -37,6 +39,8 @@ services:
       - ~/PostgreSQL/tenants/db/init/tenant2:/docker-entrypoint-initdb.d
       - tenant2:/var/lib/postgresql/data
   common:
+    environment:
+      - HOST_NAME=${HOST_NAME}
     build: ../business-services/common/target
     ports:
       - "8001:8001"
